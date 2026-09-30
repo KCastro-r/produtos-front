@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Produto } from '../models/produto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +10,23 @@ export class ProdutosService {
 
   constructor(private http: HttpClient) {}
 
-  listarTodos(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl);
+  listarTodos(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
-  buscarPorId(id: number): Observable<Produto> {
-    return this.http.get<Produto>(`${this.apiUrl}/${id}`);
+  buscarPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  criar(produto: { nome: string; preco: number }): Observable<Produto> {
-    return this.http.post<Produto>(this.apiUrl, produto);
+  criar(produto: { Nome: string; Preco: number }): Observable<any> {
+    return this.http.post<any>(this.apiUrl, produto);
   }
 
-  atualizar(id: number, produto: { nome: string; preco: number }): Observable<Produto> {
-    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto);
+  atualizar(id: number, produto: { Id: number; Nome: string; Preco: number }): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, produto);
   }
 
-  remover(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  remover(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
