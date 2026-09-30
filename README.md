@@ -1,59 +1,25 @@
-# ProdutosFront
+# 📦 Gerenciamento de Produtos (Front-End)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Aplicação front-end em Angular desenvolvida para realizar o gerenciamento completo (CRUD) de produtos, integrada à API REST em .NET Core (`MinhaPrimeiraApi`).
 
-## Development server
+## 🔗 Repositórios do Projeto
 
-To start a local development server, run:
+- **Front-End (Angular):** [produtos-front](https://github.com/KCastro-r/produtos-front.git)
+- **Back-End (.NET Core API):** [MinhaPrimeiraApi](https://github.com/KCastro-r/MinhaPrimeiraApi.git)
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Funcionalidades Implementadas
 
-## Code scaffolding
+- 🟢 **Listar todos os produtos:** Exibição dinâmica em tabela.
+- 🔍 **Buscar produto por ID:** Consulta individual ao banco de dados.
+- ➕ **Adicionar produto:** Validação e cadastro instantâneo.
+- ✏️ **Editar produto:** Atualização de dados via formulário inline.
+- ❌ **Remover produto:** Exclusão com confirmação visual.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🛠️ Tecnologias Utilizadas
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Front-End:** Angular (Standalone Components), TypeScript, Bootstrap, RxJS
+- **Back-End:** .NET Core, C#, Entity Framework Core, SQLite
