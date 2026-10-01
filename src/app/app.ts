@@ -18,8 +18,6 @@ export class App implements OnInit {
   mensagemErro: string = '';
   mensagemSucesso: string = '';
   idBusca: number | null = null;
-
-  // Controle visual para destruir e recriar a tabela no DOM
   carregandoTabela: boolean = false;
 
   constructor(
@@ -42,19 +40,13 @@ export class App implements OnInit {
   carregarProdutos(): void {
     this.mensagemErro = '';
     this.idBusca = null;
-
-    // 1. Remove a tabela da tela (Força destruição no HTML)
     this.carregandoTabela = true;
     this.cdr.detectChanges();
 
     this.produtosService.listarTodos().subscribe({
       next: (resposta: any) => {
         const listaBruta = resposta?.dados ?? (Array.isArray(resposta) ? resposta : []);
-        
-        // 2. Atualiza os dados com uma nova referência de array
         this.produtos = listaBruta.map((p: any) => this.normalizarProduto(p));
-
-        // 3. Recoloca a tabela no DOM e FORÇA RENDERIZAÇÃO
         this.carregandoTabela = false;
         this.cdr.detectChanges();
       },
@@ -91,8 +83,7 @@ export class App implements OnInit {
         this.carregandoTabela = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Erro ao buscar produto:', err);
+      error: () => {
         this.produtos = [];
         this.mensagemErro = `Produto com ID ${this.idBusca} não foi encontrado.`;
         this.carregandoTabela = false;
@@ -118,17 +109,12 @@ export class App implements OnInit {
       return;
     }
 
-    const payload = {
-      Nome: nome,
-      Preco: preco
-    };
+    const payload = { Nome: nome, Preco: preco };
 
     this.produtosService.criar(payload).subscribe({
       next: (resposta: any) => {
         this.novoProduto = { nome: '', preco: 0 };
         this.mensagemSucesso = resposta?.mensagem || 'Produto cadastrado com sucesso!';
-        
-        // Dispara a busca e força a recriação da tabela
         this.carregarProdutos();
       },
       error: (err) => {
@@ -142,11 +128,15 @@ export class App implements OnInit {
   iniciarEdicao(produto: Produto): void {
     this.mensagemErro = '';
     this.mensagemSucesso = '';
+    // Ativa a edição inline e clona o objeto
     this.produtoEditando = { ...produto };
+    // Força o Angular a transformar a linha selecionada em campos editáveis no mesmo instante
+    this.cdr.detectChanges();
   }
 
   cancelarEdicao(): void {
     this.produtoEditando = null;
+    this.cdr.detectChanges();
   }
 
   salvarEdicao(): void {
@@ -159,21 +149,13 @@ export class App implements OnInit {
     const nome = this.produtoEditando.nome ? this.produtoEditando.nome.trim() : '';
     const preco = Number(this.produtoEditando.preco);
 
-    if (!id) {
-      this.mensagemErro = 'Erro: ID do produto não foi encontrado para edição.';
+    if (!id || !nome || isNaN(preco) || preco < 0.01) {
+      this.mensagemErro = 'Preencha o nome e um preço válido.';
+      this.cdr.detectChanges();
       return;
     }
 
-    if (isNaN(preco) || preco < 0.01) {
-      this.mensagemErro = 'O preço deve ser maior que R$ 0,00.';
-      return;
-    }
-
-    const payload = {
-      Id: id,
-      Nome: nome,
-      Preco: preco
-    };
+    const payload = { Id: id, Nome: nome, Preco: preco };
 
     this.produtosService.atualizar(id, payload).subscribe({
       next: (resposta: any) => {
@@ -193,10 +175,7 @@ export class App implements OnInit {
     this.mensagemErro = '';
     this.mensagemSucesso = '';
 
-    if (!id) {
-      this.mensagemErro = 'Não foi possível identificar o ID do produto para remoção.';
-      return;
-    }
+    if (!id) return;
 
     if (confirm('Tem certeza que deseja remover este produto?')) {
       this.produtosService.remover(id).subscribe({

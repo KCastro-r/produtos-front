@@ -1,12 +1,11 @@
 <div class="container my-4">
   <h1 class="mb-4">Gerenciamento de Produtos</h1>
 
-  <!-- Alerta de Erro -->
+  <!-- Alertas de Sucesso e Erro -->
   <div *ngIf="mensagemErro" class="alert alert-danger mb-3">
     {{ mensagemErro }}
   </div>
 
-  <!-- Alerta de Sucesso -->
   <div *ngIf="mensagemSucesso" class="alert alert-success mb-3">
     {{ mensagemSucesso }}
   </div>
@@ -31,44 +30,51 @@
     </div>
   </div>
 
-  <!-- Card: Editar Produto -->
-  <div *ngIf="produtoEditando" class="card p-3 mb-4 bg-warning-subtle">
-    <h3>Editar Produto #{{ produtoEditando.id }}</h3>
-    <div class="d-flex gap-2 col-md-8">
-      <input type="text" name="nomeEdit" [(ngModel)]="produtoEditando.nome" class="form-control" placeholder="Nome">
-      <input type="number" name="precoEdit" [(ngModel)]="produtoEditando.preco" class="form-control" placeholder="Preço">
-      <button type="button" class="btn btn-primary" (click)="salvarEdicao()">Salvar</button>
-      <button type="button" class="btn btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- Tabela de Produtos com Reinicialização N
-  ative (*ngIf) -->
+  <!-- Tabela de Produtos com Edição Inline na Linha -->
   <h3>Lista de Produtos</h3>
-  
+
   <div *ngIf="carregandoTabela" class="text-secondary my-3">
     <em>Atualizando tabela...</em>
   </div>
 
-  <table *ngIf="!carregandoTabela" class="table table-bordered table-striped mt-2">
+  <table *ngIf="!carregandoTabela" class="table table-bordered table-striped mt-2 align-middle">
     <thead class="table-primary">
       <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Preço</th>
-        <th>Ações</th>
+        <th style="width: 10%;">ID</th>
+        <th style="width: 40%;">Nome</th>
+        <th style="width: 25%;">Preço</th>
+        <th style="width: 25%;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let p of produtos">
         <td>{{ p.id }}</td>
-        <td>{{ p.nome }}</td>
-        <td>R$ {{ (p.preco ?? 0).toFixed(2) }}</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="iniciarEdicao(p)">Editar</button>
-          <button type="button" class="btn btn-sm btn-outline-danger" (click)="remover(p.id)">Remover</button>
-        </td>
+
+        <!-- MODO DE EXIBIÇÃO (PADRÃO) -->
+        <ng-container *ngIf="produtoEditando?.id !== p.id">
+          <td>{{ p.nome }}</td>
+          <td>R$ {{ (p.preco ?? 0).toFixed(2) }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="iniciarEdicao(p)">Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="remover(p.id)">Remover</button>
+          </td>
+        </ng-container>
+
+        <!-- MODO DE EDIÇÃO INLINE (Ativa diretamente na linha da tabela ao clicar em Editar) -->
+        <ng-container *ngIf="produtoEditando?.id === p.id">
+          <td>
+            <input type="text" [(ngModel)]="produtoEditando!.nome" class="form-control form-control-sm">
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="produtoEditando!.preco" class="form-control form-control-sm">
+          </td>
+          <td>
+            <button type="button" class="btn btn-sm btn-success me-2" (click)="salvarEdicao()">Salvar</button>
+            <button type="button" class="btn btn-sm btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
+          </td>
+        </ng-container>
       </tr>
+
       <tr *ngIf="produtos.length === 0">
         <td colspan="4" class="text-center">Nenhum produto encontrado.</td>
       </tr>
